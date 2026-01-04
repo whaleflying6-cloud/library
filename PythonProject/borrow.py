@@ -5,6 +5,31 @@ from datetime import date, timedelta
 borrow_bp = Blueprint('borrow', __name__)
 
 
+def get_single_value(result, key=0):
+    """
+    安全地从 fetchone() 结果中获取单个值
+    result: fetchone() 返回的结果（可能是元组、字典或None）
+    key: 如果是字典，指定键名；如果是元组，指定索引（默认0）
+    """
+    if result is None:
+        return None
+
+    if isinstance(result, dict):
+        # 如果是字典，key可以是键名
+        if isinstance(key, int):
+            # 如果key是数字，尝试转换为字符串
+            possible_keys = list(result.keys())
+            if key < len(possible_keys):
+                return result[possible_keys[key]]
+            return None
+        else:
+            return result.get(key)
+    elif isinstance(result, tuple):
+        index = key if isinstance(key, int) else 0
+        return result[index] if len(result) > index else None
+    else:
+        return result
+
 # 借书页面（显示可借图书和读者列表）
 @borrow_bp.route('/')
 def borrow_page():
@@ -48,7 +73,11 @@ def borrow_book():
 
     # 检查库存
     cursor.execute("SELECT available_count FROM book WHERE id = %s", (book_id,))
-    available = cursor.fetchone()[0]
+    result = cursor.fetchone()
+    if result is None:
+        conn.close()
+        return "图书不存在"
+    available = get_single_value(result, 'available_count') or get_single_value(result, 0)
 
     if available <= 0:
         conn.close()
@@ -86,7 +115,11 @@ def return_book(record_id):
 
     # 获取借阅记录对应的图书ID
     cursor.execute("SELECT book_id FROM borrow_record WHERE id = %s", (record_id,))
-    book_id = cursor.fetchone()[0]
+    result = cursor.fetchone()
+    if result is None:
+        conn.close()
+        return "借阅记录不存在"
+    book_id = get_single_value(result, 'book_id') or get_single_value(result, 0)
 
     # 更新借阅记录状态
     cursor.execute("""

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>图书馆管理系统</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin: 10px 0; }
+        a {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover { background: #45a049; }
+    </style>
+</head>
+<body>
+<h1>📚 基于 Web 的图书馆管理系统</h1>
+
+<ul>
+    <li><a href="/book/list">📖 图书管理</a></li>
+    <li><a href="/reader/list">👥 读者管理</a></li>
+    <li><a href="/borrow/">🔄 借书/还书管理</a></li>
+    {% if session.get('username') %}
+        <li>欢迎，{{ session['username'] }}! <a href="/auth/logout">登出</a></li>
+    {% else %}
+        <li><a href="/auth/login">👤 管理员登录</a></li>
+    {% endif %}
+</ul>
+
+</body>
+</html>

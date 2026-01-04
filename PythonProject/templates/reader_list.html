@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>读者管理</title>
+    <style>
+        table { border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        .form-group { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<h2>👥 读者管理</h2>
+
+<!-- 读者列表 -->
+<h3>读者列表</h3>
+{% if readers %}
+<table>
+    <tr>
+        <th>ID</th>
+        <th>姓名</th>
+        <th>学号/工号</th>
+        <th>类型</th>
+        <th>最大借阅量</th>
+        <th>操作</th>
+    </tr>
+    {% for reader in readers %}
+    <tr>
+        <td>{{ reader.id }}</td>
+        <td>{{ reader.name }}</td>
+        <td>{{ reader.student_no }}</td>
+        <td>{{ reader.type }}</td>
+        <td>{{ reader.max_borrow }}</td>
+        <td>
+            <a href="/reader/delete/{{ reader.id }}"
+               onclick="return confirm('确定删除读者 {{ reader.name }} 吗？')">
+                删除
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>暂无读者数据</p>
+{% endif %}
+
+<hr>
+
+<!-- 添加读者表单 -->
+<h3>添加新读者</h3>
+<form method="post" action="/reader/add">
+    <div class="form-group">
+        <label>姓名：</label>
+        <input type="text" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label>学号/工号：</label>
+        <input type="text" name="student_no">
+    </div>
+
+    <div class="form-group">
+        <label>类型：</label>
+        <select name="type">
+            <option value="student">学生</option>
+            <option value="teacher">教师</option>
+            <option value="other">其他</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>最大借阅量：</label>
+        <input type="number" name="max_borrow" value="5" min="1">
+    </div>
+
+    <button type="submit">添加读者</button>
+</form>
+
+<br>
+<a href="/">⬅ 返回首页</a>
+
+</body>
+</html>

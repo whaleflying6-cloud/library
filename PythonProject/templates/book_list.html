@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>图书列表</title>
+</head>
+<body>
+
+<h2>图书列表</h2>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>书名</th>
+        <th>作者</th>
+        <th>分类</th>
+        <th>总数量</th>
+        <th>可借数量</th>
+    </tr>
+    {% for book in books %}
+    <tr>
+        <td>{{ book.id }}</td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.category }}</td>
+        <td>{{ book.total_count }}</td>
+        <td>{{ book.available_count }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>添加图书</h3>
+<form method="post" action="/book/add">
+    书名：<input name="title"><br>
+    作者：<input name="author"><br>
+    ISBN：<input name="isbn"><br>
+    分类：<input name="category"><br>
+    数量：<input name="total_count" type="number"><br>
+    <button type="submit">添加</button>
+</form>
+
+<br>
+<a href="/">⬅ 返回首页</a>
+
+</body>
+</html>

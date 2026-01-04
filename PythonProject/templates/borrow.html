@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>借书/还书管理</title>
+    <style>
+        table { border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<h2>📚 借书管理</h2>
+
+<!-- 借书表单 -->
+<form method="post" action="/borrow/borrow">
+    <h3>借书操作</h3>
+
+    选择读者：
+    <select name="reader_id" required>
+        <option value="">--选择读者--</option>
+        {% for reader in readers %}
+        <option value="{{ reader.id }}">{{ reader.name }} ({{ reader.student_no }})</option>
+        {% endfor %}
+    </select><br><br>
+
+    选择图书：
+    <select name="book_id" required>
+        <option value="">--选择图书--</option>
+        {% for book in books %}
+        <option value="{{ book.id }}">{{ book.title }} (剩余: {{ book.available_count }})</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">确认借书</button>
+</form>
+
+<hr>
+
+<!-- 当前借阅记录 -->
+<h3>当前借阅中的图书</h3>
+{% if records %}
+<table>
+    <tr>
+        <th>记录ID</th>
+        <th>读者</th>
+        <th>图书</th>
+        <th>借书日期</th>
+        <th>应还日期</th>
+        <th>操作</th>
+    </tr>
+    {% for record in records %}
+    <tr>
+        <td>{{ record.id }}</td>
+        <td>{{ record.name }}</td>
+        <td>{{ record.title }}</td>
+        <td>{{ record.borrow_date }}</td>
+        <td>{{ record.due_date }}</td>
+        <td><a href="/borrow/return/{{ record.id }}">还书</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>暂无借阅记录</p>
+{% endif %}
+
+<br>
+<a href="/">⬅ 返回首页</a>
+
+</body>
+</html>
